@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         detectButton = findViewById(R.id.ObsDetectionImageBtn);
         imageView = findViewById(R.id.GenEyeLogo);
 
-        cameraButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, DetectorActivity.class)));
+        cameraButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, VoiceInputActivity.class)));
 
         detectButton.setOnClickListener(v -> {
             Handler handler = new Handler();
