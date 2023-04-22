@@ -1,0 +1,13 @@
+train: ../train/images
+val: ../valid/images
+test: ../test/images
+
+nc: 5
+names: ['10 TL', '100 TL', '20 TL', '5 TL', '50 TL']
+
+roboflow:
+  workspace: adil-meric
+  project: para
+  version: 4
+  license: CC BY 4.0
+  url: https://universe.roboflow.com/adil-meric/para/dataset/4
