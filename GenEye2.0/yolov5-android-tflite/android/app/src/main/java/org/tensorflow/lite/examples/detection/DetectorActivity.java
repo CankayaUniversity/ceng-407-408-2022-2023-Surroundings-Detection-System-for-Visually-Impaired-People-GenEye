@@ -16,6 +16,7 @@
 
 package org.tensorflow.lite.examples.detection;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.Bitmap.Config;
 import android.graphics.Canvas;
@@ -217,6 +218,8 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         ++timestamp;
         final long currTimestamp = timestamp;
         trackingOverlay.postInvalidate();
+        Intent myIntent = getIntent(); // gets the previously created intent
+        String label = myIntent.getStringExtra("label");
 
         // No mutex needed as this method is not reentrant.
         if (computingDetection) {
@@ -241,6 +244,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
                 new Runnable() {
                     @Override
                     public void run() {
+
                         LOGGER.i("Running detection on image " + currTimestamp);
                         final long startTime = SystemClock.uptimeMillis();
                         final List<Classifier.Recognition> results = detector.recognizeImage(croppedBitmap);
@@ -267,13 +271,16 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
 
                         for (final Classifier.Recognition result : results) {
                             final RectF location = result.getLocation();
-                            if (location != null && result.getConfidence() >= minimumConfidence) {
+                            Log.d("label", label);
+                            if (location != null && result.getConfidence() >= minimumConfidence && result.getTitle().equals(label)) {   //buraya label gelecek
+
                                 canvas.drawRect(location, paint);
 
                                 cropToFrameTransform.mapRect(location);
 
                                 result.setLocation(location);
                                 mappedRecognitions.add(result);
+
                             }
                         }
 
