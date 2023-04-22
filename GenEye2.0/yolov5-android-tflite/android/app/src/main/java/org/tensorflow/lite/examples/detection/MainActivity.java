@@ -14,7 +14,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.os.Bundle;
 import android.os.Handler;
-import android.widget.Button;
+import android.speech.tts.TextToSpeech;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
@@ -30,6 +30,7 @@ import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -65,16 +66,33 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton cameraButton, detectButton;
     private ImageView imageView;
 
+    private TextToSpeech textToSpeech;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_page);
 
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    System.out.println("SUCCESS");
+                    textToSpeech.setLanguage(Locale.UK);
+                } else {
+                    System.out.println("FAILURE");
+                }
+            }
+        });
+
         cameraButton = findViewById(R.id.ObjDetectionImageBtn);
         detectButton = findViewById(R.id.ObsDetectionImageBtn);
         imageView = findViewById(R.id.GenEyeLogo);
 
-        cameraButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, VoiceInputActivity.class)));
+        cameraButton.setOnClickListener(v -> {
+            startActivity(new Intent(MainActivity.this, VoiceInputActivity.class));
+            textToSpeech.speak("object detection", TextToSpeech.QUEUE_FLUSH, null);
+        });
 
         detectButton.setOnClickListener(v -> {
             Handler handler = new Handler();
@@ -84,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                 handler.post(new Runnable() {
                     @Override
                     public void run() {
+                        textToSpeech.speak("obstacle detection", TextToSpeech.QUEUE_FLUSH, null);
                         handleResult(cropBitmap, results);
                     }
                 });
