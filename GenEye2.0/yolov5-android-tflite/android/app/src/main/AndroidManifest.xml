@@ -45,6 +45,16 @@
         </activity>
 
         <activity
+            android:name=".ObstacleDetectorActivity"
+            android:label="@string/tfe_od_app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name=".VoiceInputActivity"
             android:label="@string/tfe_od_app_name"
             android:screenOrientation="portrait">

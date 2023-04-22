@@ -76,19 +76,7 @@ public class MainActivity extends AppCompatActivity {
 
         cameraButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, VoiceInputActivity.class)));
 
-        detectButton.setOnClickListener(v -> {
-            Handler handler = new Handler();
-
-            new Thread(() -> {
-                final List<Classifier.Recognition> results = detector.recognizeImage(cropBitmap);
-                handler.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        handleResult(cropBitmap, results);
-                    }
-                });
-            }).start();
-        });
+        detectButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, ObstacleDetectorActivity.class)));
 
         this.sourceBitmap = Utils.getBitmapFromAsset(MainActivity.this, "kite.jpg");
 
