@@ -44,5 +44,14 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".VoiceInputActivity"
+            android:label="@string/tfe_od_app_name"
+            android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.GET_CONTENT" />
+                <category android:name="android.intent.category.ALTERNATIVE" />
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
