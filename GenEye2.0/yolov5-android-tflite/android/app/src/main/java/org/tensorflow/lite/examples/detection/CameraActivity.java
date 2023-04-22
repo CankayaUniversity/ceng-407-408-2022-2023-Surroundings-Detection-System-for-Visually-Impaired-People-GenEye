@@ -17,8 +17,11 @@
 package org.tensorflow.lite.examples.detection;
 
 import android.Manifest;
+import android.app.ActivityManager;
 import android.app.Fragment;
 import android.content.Context;
+import android.content.Intent;
+import android.content.pm.ConfigurationInfo;
 import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
 import android.hardware.Camera;
@@ -57,9 +60,12 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
+import org.tensorflow.lite.examples.detection.env.Utils;
+import org.tensorflow.lite.examples.detection.tflite.Classifier;
 
 public abstract class CameraActivity extends AppCompatActivity
     implements OnImageAvailableListener,
@@ -185,6 +191,7 @@ public abstract class CameraActivity extends AppCompatActivity
         });
     sheetBehavior.setHideable(false);
 
+    /**bottom toolbar for the application*/
     sheetBehavior.setBottomSheetCallback(
         new BottomSheetBehavior.BottomSheetCallback() {
           @Override
@@ -221,7 +228,6 @@ public abstract class CameraActivity extends AppCompatActivity
     plusImageView.setOnClickListener(this);
     minusImageView.setOnClickListener(this);
   }
-
 
 
   protected ArrayList<String> getModelStrings(AssetManager mgr, String path){

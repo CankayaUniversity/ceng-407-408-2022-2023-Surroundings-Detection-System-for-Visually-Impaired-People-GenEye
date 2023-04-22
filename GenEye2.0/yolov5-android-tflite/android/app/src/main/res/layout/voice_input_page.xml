@@ -7,36 +7,36 @@
     tools:context=".MainActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/GenEyeLogo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
         android:layout_marginEnd="210dp"
         android:layout_marginBottom="628dp"
-        app:srcCompat="@drawable/adsz" />
+        app:srcCompat="@drawable/geneye_logo" />
 
     <ImageButton
-        android:id="@+id/imageButton2"
+        android:id="@+id/VoiceInputBtn"
         android:layout_width="99dp"
         android:layout_height="82dp"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="115dp"
-        app:srcCompat="@android:drawable/ic_btn_speak_now" />
+        app:srcCompat="@android:drawable/ic_btn_speak_now"
+        />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/VoiceInputBtn"
         android:layout_centerHorizontal="true"
-        android:layout_above="@+id/imageButton2"
-        android:layout_marginBottom="226dp"
+        android:layout_marginBottom="199dp"
         android:text="TextView"
-        android:textStyle="bold|italic"
         android:textSize="@android:dimen/app_icon_size"
 
-        />
+        android:textStyle="bold|italic" />
 
 
 </RelativeLayout>

@@ -21,7 +21,7 @@
             android:layout_width="match_parent"
             android:layout_height="265dp"
             android:background="#9acc99"
-            app:srcCompat="@drawable/objectdetectionbuttonimage"
+            app:srcCompat="@drawable/object_detection_button_image"
             />
 
         <ImageButton
@@ -33,17 +33,17 @@
             android:layout_alignParentEnd="true"
             android:layout_marginTop="19dp"
             android:background="#99cdff"
-            app:srcCompat="@drawable/obstacledetectionbuttonimage"
+            app:srcCompat="@drawable/obstacle_detection_button_image"
             />
 
 
     </RelativeLayout>
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@drawable/adsz" />
+        android:id="@+id/GenEyeLogo"
+        android:layout_width="202dp"
+        android:layout_height="102dp"
+        app:srcCompat="@drawable/geneye_logo" />
 
 
 </RelativeLayout>
