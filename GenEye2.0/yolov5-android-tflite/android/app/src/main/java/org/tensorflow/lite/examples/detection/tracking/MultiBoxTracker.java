@@ -34,6 +34,10 @@ import org.tensorflow.lite.examples.detection.env.BorderedText;
 import org.tensorflow.lite.examples.detection.env.ImageUtils;
 import org.tensorflow.lite.examples.detection.env.Logger;
 import org.tensorflow.lite.examples.detection.tflite.Classifier.Recognition;
+import android.speech.tts.TextToSpeech;
+import java.util.Locale;
+import org.tensorflow.lite.examples.detection.MainActivity;
+
 
 /** A tracker that handles non-max suppression and matches existing objects to new detections. */
 public class MultiBoxTracker {
@@ -68,11 +72,14 @@ public class MultiBoxTracker {
   private int frameHeight;
   private int sensorOrientation;
 
-  public MultiBoxTracker(final Context context) {
+  private TextToSpeech textToSpeech;
+
+
+  public MultiBoxTracker(final Context context, TextToSpeech textToSpeech) {
     for (final int color : COLORS) {
       availableColors.add(color);
     }
-
+    this.textToSpeech = textToSpeech;
     boxPaint.setColor(Color.RED);
     boxPaint.setStyle(Style.STROKE);
     boxPaint.setStrokeWidth(10.0f);
@@ -159,16 +166,18 @@ public class MultiBoxTracker {
 
     screenRects.clear();
     final Matrix rgbFrameToScreen = new Matrix(getFrameToCanvasMatrix());
-
+    boolean voice_output = true;
     for (final Recognition result : results) {
       if (result.getLocation() == null) {
         continue;
       }
       final RectF detectionFrameRect = new RectF(result.getLocation());
-
       final RectF detectionScreenRect = new RectF();
       rgbFrameToScreen.mapRect(detectionScreenRect, detectionFrameRect);
-
+      if(voice_output) {
+        textToSpeech.speak("found", TextToSpeech.QUEUE_FLUSH, null);
+        voice_output = false;
+      }
       logger.v(
               "Result! Frame: " + result.getLocation() + " mapped to screen:" + detectionScreenRect);
 

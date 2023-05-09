@@ -27,7 +27,9 @@ import android.graphics.Paint.Style;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
+import android.os.Bundle;
 import android.os.SystemClock;
+import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
@@ -36,6 +38,7 @@ import android.widget.Toast;
 import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Locale;
 
 import org.tensorflow.lite.examples.detection.customview.OverlayView;
 import org.tensorflow.lite.examples.detection.customview.OverlayView.DrawCallback;
@@ -81,6 +84,24 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
 
     private BorderedText borderedText;
 
+    private TextToSpeech textToSpeech;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        textToSpeech = new TextToSpeech(getApplicationContext(), new TextToSpeech.OnInitListener() {
+            @Override
+            public void onInit(int status) {
+                if(status != TextToSpeech.ERROR) {
+                    System.out.println("SUCCESS");
+                    textToSpeech.setLanguage(Locale.UK);
+                } else {
+                    System.out.println("FAILURE");
+                }
+            }
+        });
+    }
+
     @Override
     public void onPreviewSizeChosen(final Size size, final int rotation) {
         final float textSizePx =
@@ -89,7 +110,7 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
         borderedText = new BorderedText(textSizePx);
         borderedText.setTypeface(Typeface.MONOSPACE);
 
-        tracker = new MultiBoxTracker(this);
+        tracker = new MultiBoxTracker(this, textToSpeech);
 
         final int modelIndex = modelView.getCheckedItemPosition();
         final String modelString = modelStrings.get(modelIndex);

@@ -29,6 +29,7 @@ import org.tensorflow.lite.examples.detection.tflite.YoloV5Classifier;
 import org.tensorflow.lite.examples.detection.tracking.MultiBoxTracker;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -67,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageButton cameraButton, detectButton;
     private ImageView imageView;
 
-    private TextToSpeech textToSpeech;
+    public TextToSpeech textToSpeech;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -125,7 +126,7 @@ public class MainActivity extends AppCompatActivity {
         cropToFrameTransform = new Matrix();
         frameToCropTransform.invert(cropToFrameTransform);
 
-        tracker = new MultiBoxTracker(this);
+        tracker = new MultiBoxTracker(this, textToSpeech);
         trackingOverlay = findViewById(R.id.tracking_overlay);
         trackingOverlay.addCallback(
                 canvas -> tracker.draw(canvas));
