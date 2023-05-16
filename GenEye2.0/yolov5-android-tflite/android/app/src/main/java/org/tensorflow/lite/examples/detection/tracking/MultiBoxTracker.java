@@ -175,7 +175,15 @@ public class MultiBoxTracker {
       final RectF detectionScreenRect = new RectF();
       rgbFrameToScreen.mapRect(detectionScreenRect, detectionFrameRect);
       if(voice_output) {
-        textToSpeech.speak("found", TextToSpeech.QUEUE_FLUSH, null);
+        if (detectionScreenRect.centerX() - result.getLocation().centerX() > 300 ){
+          textToSpeech.speak("it is little bit to right", TextToSpeech.QUEUE_FLUSH, null);
+        }
+        else if (detectionScreenRect.centerX() - result.getLocation().centerX() < -300){
+          textToSpeech.speak("it is little bit to left", TextToSpeech.QUEUE_FLUSH, null);
+        }
+        else {
+          textToSpeech.speak("it is in front of you", TextToSpeech.QUEUE_FLUSH, null);
+        }
         voice_output = false;
       }
       logger.v(
