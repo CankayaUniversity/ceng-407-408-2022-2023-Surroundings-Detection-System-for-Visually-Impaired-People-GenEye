@@ -13,3 +13,5 @@ Surroundings Detection System for Visually Impaired People – GenEye
 <a href='https://www.canva.com/design/DAFXoVAMYGI/1OUMlNWQE2dls6MkfQAKrw/view?utm_content=DAFXoVAMYGI&utm_campaign=designshare&utm_medium=link&utm_source=publishsharelink' > Project Presentation <a/>
 <br>
 <a href='https://github.com/CankayaUniversity/ceng-407-408-2022-2023-Surroundings-Detection-System-for-Visually-Impaired-People-GenEye/wiki/Test-Plan-Document' > Test Plan Document <a/>
+ <br>
+ <a href='https://github.com/CankayaUniversity/ceng-407-408-2022-2023-Surroundings-Detection-System-for-Visually-Impaired-People-GenEye/blob/main/Documents/GenEye%20User%20Manual.pdf' > User Manual <a/>
