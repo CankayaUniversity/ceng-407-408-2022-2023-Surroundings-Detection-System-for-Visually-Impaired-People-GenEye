@@ -24,8 +24,6 @@ import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
-import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.RectF;
 import android.graphics.Typeface;
 import android.media.ImageReader.OnImageAvailableListener;
@@ -35,7 +33,6 @@ import android.speech.tts.TextToSpeech;
 import android.util.Log;
 import android.util.Size;
 import android.util.TypedValue;
-import android.view.Display;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -113,7 +110,7 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
         borderedText = new BorderedText(textSizePx);
         borderedText.setTypeface(Typeface.MONOSPACE);
 
-        tracker = new MultiBoxTracker(this, textToSpeech);
+        tracker = new MultiBoxTracker(this, textToSpeech, 2);
 
         final int modelIndex = modelView.getCheckedItemPosition();
         final String modelString = modelStrings.get(modelIndex);
@@ -236,30 +233,12 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
             frameToCropTransform.invert(cropToFrameTransform);
         });
     }
-    float sign (PointF p1, PointF p2, PointF p3)
-    {
-        return (p1.x - p3.x) * (p2.y - p3.y) - (p2.x - p3.x) * (p1.y - p3.y);
-    }
-    public boolean PointInTriangle (PointF pt, PointF v1, PointF v2, PointF v3)
-    {
-        float d1, d2, d3;
-        boolean has_neg, has_pos;
 
-        d1 = sign(pt, v1, v2);
-        d2 = sign(pt, v2, v3);
-        d3 = sign(pt, v3, v1);
-
-        has_neg = (d1 < 0) || (d2 < 0) || (d3 < 0);
-        has_pos = (d1 > 0) || (d2 > 0) || (d3 > 0);
-
-        return !(has_neg && has_pos);
-    }
     @Override
     protected void processImage() {
         ++timestamp;
         final long currTimestamp = timestamp;
         trackingOverlay.postInvalidate();
-
 
         // No mutex needed as this method is not reentrant.
         if (computingDetection) {
@@ -298,16 +277,6 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
                         paint.setColor(Color.RED);
                         paint.setStyle(Style.STROKE);
                         paint.setStrokeWidth(2.0f);
-                        float midX;
-                        float midY;
-                        Display display = getWindowManager().getDefaultDisplay();
-                        Point size = new Point();
-                        display.getSize(size);
-                        float triX = size.x;
-                        float triY = size.y;
-                        PointF triLeft = new PointF(0,0);
-                        PointF triRight = new PointF(triX,0);
-                        PointF triTop = new PointF(triX / 2,triY);
 
                         float minimumConfidence = MINIMUM_CONFIDENCE_TF_OD_API;
                         switch (MODE) {
@@ -321,18 +290,13 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
 
                         for (final Classifier.Recognition result : results) {
                             final RectF location = result.getLocation();
-
+                            //Log.d("label", label);
                             if (location != null && result.getConfidence() >= minimumConfidence) {
 
                                 canvas.drawRect(location, paint);
-                                midX = (location.left + location.right) / 2;
-                                midY = (location.top + location.bottom) / 2;
+
                                 cropToFrameTransform.mapRect(location);
 
-                                if(PointInTriangle(new PointF(midX, midY), triLeft,triTop,triRight))
-                                {
-                                    System.out.println("INSIDE TRIANGLE");
-                                }
                                 result.setLocation(location);
                                 mappedRecognitions.add(result);
 

@@ -74,8 +74,13 @@ public class MultiBoxTracker {
 
   private TextToSpeech textToSpeech;
 
+  private int mode;
+  private int canvaswidth;
+  private int canvasheight;
 
-  public MultiBoxTracker(final Context context, TextToSpeech textToSpeech) {
+
+
+  public MultiBoxTracker(final Context context, TextToSpeech textToSpeech, int mode) {
     for (final int color : COLORS) {
       availableColors.add(color);
     }
@@ -86,6 +91,7 @@ public class MultiBoxTracker {
     boxPaint.setStrokeCap(Cap.ROUND);
     boxPaint.setStrokeJoin(Join.ROUND);
     boxPaint.setStrokeMiter(100);
+    this.mode = mode;
 
     textSizePx =
             TypedValue.applyDimension(
@@ -128,6 +134,8 @@ public class MultiBoxTracker {
   }
 
   public synchronized void draw(final Canvas canvas) {
+    canvaswidth = canvas.getWidth();
+    canvasheight = canvas.getHeight();
     final boolean rotated = sensorOrientation % 180 == 90;
     final float multiplier =
             Math.min(
@@ -161,6 +169,7 @@ public class MultiBoxTracker {
     }
   }
 
+
   private void processResults(final List<Recognition> results) {
     final List<Pair<Float, Recognition>> rectsToTrack = new LinkedList<Pair<Float, Recognition>>();
 
@@ -174,7 +183,9 @@ public class MultiBoxTracker {
       final RectF detectionFrameRect = new RectF(result.getLocation());
       final RectF detectionScreenRect = new RectF();
       rgbFrameToScreen.mapRect(detectionScreenRect, detectionFrameRect);
-      if(voice_output) {
+
+
+      if(voice_output && mode ==1) {
         if (detectionScreenRect.centerX() - result.getLocation().centerX() > 300 ){
           textToSpeech.speak("it is little bit to right", TextToSpeech.QUEUE_FLUSH, null);
         }
@@ -185,6 +196,35 @@ public class MultiBoxTracker {
           textToSpeech.speak("it is in front of you", TextToSpeech.QUEUE_FLUSH, null);
         }
         voice_output = false;
+      }
+      else if(voice_output && mode == 2){
+        int yAxisBoundary = (int) (canvasheight * 6) / 100;
+        int xAxisMiddleBoundary = (int) canvaswidth / 3;
+        // Tehlike olacak yerde belirli bir araligi belirtmek icin bu iki variablei kullanıdm
+        int xAxisLowerBoundary = xAxisMiddleBoundary - xAxisMiddleBoundary /4 ;
+        int xAxisUpperBoundary = xAxisMiddleBoundary + xAxisMiddleBoundary /4 ;
+
+        //debug
+        //System.out.println("lower : " + xAxisLowerBoundary + " middle : " + xAxisMiddleBoundary + " upper : " + xAxisUpperBoundary);
+        //System.out.println("Result! right: " + detectionScreenRect.right  + " left : " + result.getLocation().left + " label: " + result.getTitle());
+
+        //Belirli y degernin altina kalan yerlerde tehlike
+        if (result.getLocation().top < yAxisBoundary){
+          // eger obje ekrana sigmiyorsa
+          if (result.getLocation().left < xAxisLowerBoundary && result.getLocation().right > xAxisUpperBoundary){
+            textToSpeech.speak("big obstacle",TextToSpeech.QUEUE_FLUSH, null);
+          }
+          //burada sorun yok. cisim ekranin saginda kaliyorsa sola gitmesini soyluyor
+          if (result.getLocation().left < xAxisUpperBoundary && result.getLocation().centerX() > xAxisMiddleBoundary){
+            textToSpeech.speak("Obstacle ahead, go left",TextToSpeech.QUEUE_FLUSH, null);
+          }
+          //SORUN BURADA_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-
+          if (detectionFrameRect.right > xAxisLowerBoundary && result.getLocation().centerX() < xAxisMiddleBoundary){
+            textToSpeech.speak("Obstacle ahead, go right",TextToSpeech.QUEUE_FLUSH, null);
+          }
+          //_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-
+
+        }
       }
       logger.v(
               "Result! Frame: " + result.getLocation() + " mapped to screen:" + detectionScreenRect);
