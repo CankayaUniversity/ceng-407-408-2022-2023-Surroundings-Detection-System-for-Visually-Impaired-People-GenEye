@@ -36,6 +36,7 @@ import android.util.TypedValue;
 import android.widget.Toast;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
@@ -85,6 +86,21 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
     private BorderedText borderedText;
 
     private TextToSpeech textToSpeech;
+
+    public static final String[] OBSTACLES = new String[] {"bench",
+            "street sign",
+            "fire hydrant",
+            "traffic light",
+            "stop sign",
+            "bicycle",
+            "car",
+            "motorcycle",
+            "chair",
+            "couch",
+            "potted plant",
+            "desk",
+            "door",
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -288,11 +304,15 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
 
                         final List<Classifier.Recognition> mappedRecognitions =
                                 new LinkedList<Classifier.Recognition>();
-
+                        int limit = 4;
                         for (final Classifier.Recognition result : results) {
+                            if(limit <= 0) {
+                                break;
+                            }
+                            limit--;
                             final RectF location = result.getLocation();
-                            //Log.d("label", label);
-                            if (location != null && result.getConfidence() >= minimumConfidence) {
+                            Log.i("title:",result.getTitle());
+                            if (location != null && result.getConfidence() >= minimumConfidence && Arrays.asList(OBSTACLES).contains(result.getTitle())) {
 
                                 canvas.drawRect(location, paint);
 
