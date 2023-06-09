@@ -20,3 +20,5 @@ Surroundings Detection System for Visually Impaired People – GenEye
   <br>
  <a href='https://www.youtube.com/watch?v=zYtjm_7t940' target='_blank'> Demo Video <a/>
  <br>
+  <a href = "https://youtu.be/zYtjm_7t940" target="_blank">link adı</a>
+  <br>
