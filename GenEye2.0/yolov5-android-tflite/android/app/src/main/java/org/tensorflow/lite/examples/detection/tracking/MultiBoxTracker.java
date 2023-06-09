@@ -174,6 +174,7 @@ public class MultiBoxTracker {
       getFrameToCanvasMatrix().mapRect(trackedPos);
       System.out.println("trackRight : " + trackedPos.right + " trackLeft : " + trackedPos.left + " centerx : " + trackedPos.centerX());
       //System.out.println("full width : " + canvaswidth + " half width : " + canvaswidth  /2);
+      //TODO: degerleri degistir
       if (trackedPos.top < (canvasheight * 60) / 100){
         flagThreat = 1;
         if (trackedPos.centerX() < (canvaswidth * 45) / 100){
@@ -255,7 +256,7 @@ public class MultiBoxTracker {
 
         //debug
         //System.out.println("lower : " + xAxisLowerBoundary + " middle : " + xAxisMiddleBoundary + " upper : " + xAxisUpperBoundary);
-        //System.out.println("Result! right: " + detectionScreenRect.right  + " left : " + result.getLocation().left + " label: " + result.getTitle());
+        //System.out.println("Result! right: " + detectionScreenRect.<right>  + " left : " + result.getLocation().left + " label: " + result.getTitle());
         System.out.println("canvas width: " + canvaswidth + " canvas height : " + canvasheight);
         //Belirli y degernin altina kalan yerlerde tehlike
         if (result.getLocation().top < yAxisBoundary){
