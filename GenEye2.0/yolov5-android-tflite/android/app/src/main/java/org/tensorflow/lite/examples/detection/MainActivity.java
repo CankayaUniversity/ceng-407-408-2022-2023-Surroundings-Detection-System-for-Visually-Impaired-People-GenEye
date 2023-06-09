@@ -126,12 +126,12 @@ public class MainActivity extends AppCompatActivity {
         cropToFrameTransform = new Matrix();
         frameToCropTransform.invert(cropToFrameTransform);
 
-        tracker = new MultiBoxTracker(this, textToSpeech);
-        trackingOverlay = findViewById(R.id.tracking_overlay);
-        trackingOverlay.addCallback(
-                canvas -> tracker.draw(canvas));
+        //tracker = new MultiBoxTracker(this, textToSpeech);
+        //trackingOverlay = findViewById(R.id.tracking_overlay);
+        //trackingOverlay.addCallback(
+                //canvas -> tracker.draw(canvas));
 
-        tracker.setFrameConfiguration(TF_OD_API_INPUT_SIZE, TF_OD_API_INPUT_SIZE, sensorOrientation);
+        //tracker.setFrameConfiguration(TF_OD_API_INPUT_SIZE, TF_OD_API_INPUT_SIZE, sensorOrientation);
 
         try {
             detector =
