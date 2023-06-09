@@ -143,13 +143,12 @@ public class MultiBoxTracker {
     if (flagThreat == 1){
       //textToSpeech.speak("Threat", TextToSpeech.QUEUE_FLUSH, null);
       if (flagRight == 1 && flagThreatRight == 1){
-        textToSpeech.speak("threat right side, go left", TextToSpeech.QUEUE_FLUSH, null);
+        textToSpeech.speak("go left", TextToSpeech.QUEUE_FLUSH, null);
       }
       if (flagLeft == 1 && flagThreatLeft == 1){
-        textToSpeech.speak("threat left side, go right", TextToSpeech.QUEUE_FLUSH, null);
+        textToSpeech.speak("go right", TextToSpeech.QUEUE_FLUSH, null);
       }
     }
-
   }
 
   public synchronized void draw(final Canvas canvas) {
