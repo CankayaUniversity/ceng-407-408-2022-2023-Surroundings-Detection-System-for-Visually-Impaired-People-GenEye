@@ -110,7 +110,7 @@ public class DetectorActivity extends CameraActivity implements OnImageAvailable
         borderedText = new BorderedText(textSizePx);
         borderedText.setTypeface(Typeface.MONOSPACE);
 
-        tracker = new MultiBoxTracker(this, textToSpeech);
+        tracker = new MultiBoxTracker(this, textToSpeech, 1);
 
         final int modelIndex = modelView.getCheckedItemPosition();
         final String modelString = modelStrings.get(modelIndex);
