@@ -27,6 +27,8 @@ import android.graphics.RectF;
 import android.text.TextUtils;
 import android.util.Pair;
 import android.util.TypedValue;
+
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
@@ -77,7 +79,11 @@ public class MultiBoxTracker {
   private int mode;
   private int canvaswidth;
   private int canvasheight;
-
+  private int flagThreat;
+  private int flagThreatLeft;
+  private int flagThreatRight;
+  private int flagRight;
+  private int flagLeft;
 
 
   public MultiBoxTracker(final Context context, TextToSpeech textToSpeech, int mode) {
@@ -133,6 +139,19 @@ public class MultiBoxTracker {
     return frameToCanvasMatrix;
   }
 
+  public void threat(int mode){
+    if (flagThreat == 1){
+      //textToSpeech.speak("Threat", TextToSpeech.QUEUE_FLUSH, null);
+      if (flagRight == 1 && flagThreatRight == 1){
+        textToSpeech.speak("threat right side, go left", TextToSpeech.QUEUE_FLUSH, null);
+      }
+      if (flagLeft == 1 && flagThreatLeft == 1){
+        textToSpeech.speak("threat left side, go right", TextToSpeech.QUEUE_FLUSH, null);
+      }
+    }
+
+  }
+
   public synchronized void draw(final Canvas canvas) {
     canvaswidth = canvas.getWidth();
     canvasheight = canvas.getHeight();
@@ -153,8 +172,35 @@ public class MultiBoxTracker {
       final RectF trackedPos = new RectF(recognition.location);
 
       getFrameToCanvasMatrix().mapRect(trackedPos);
+      System.out.println("trackRight : " + trackedPos.right + " trackLeft : " + trackedPos.left + " centerx : " + trackedPos.centerX());
+      //System.out.println("full width : " + canvaswidth + " half width : " + canvaswidth  /2);
+      if (trackedPos.top < (canvasheight * 60) / 100){
+        flagThreat = 1;
+        if (trackedPos.centerX() < (canvaswidth * 45) / 100){
+          flagLeft = 1;
+          flagRight = 0;
+          if (trackedPos.right > ((canvaswidth * 45) / 100 - canvaswidth / 10)){
+            flagThreatLeft = 1;
+          }
+          else{
+            flagThreatLeft = 0;
+          }
+        }
+        else if(trackedPos.centerX() > (canvaswidth * 45) / 100){
+          flagRight = 1;
+          flagLeft = 0;
+          if (trackedPos.left > ((canvaswidth * 45) / 100 + canvaswidth / 10)){
+            flagThreatRight = 1;
+          }
+          else {
+            flagThreatRight = 0;
+          }
+        }
+      }
+      else {
+        flagThreat = 0;
+      }
       boxPaint.setColor(recognition.color);
-
       float cornerSize = Math.min(trackedPos.width(), trackedPos.height()) / 8.0f;
       canvas.drawRoundRect(trackedPos, cornerSize, cornerSize, boxPaint);
 
@@ -182,8 +228,9 @@ public class MultiBoxTracker {
       }
       final RectF detectionFrameRect = new RectF(result.getLocation());
       final RectF detectionScreenRect = new RectF();
-      rgbFrameToScreen.mapRect(detectionScreenRect, detectionFrameRect);
 
+
+      rgbFrameToScreen.mapRect(detectionScreenRect, detectionFrameRect);
 
       if(voice_output && mode ==1) {
         if (detectionScreenRect.centerX() - result.getLocation().centerX() > 300 ){
@@ -198,7 +245,9 @@ public class MultiBoxTracker {
         voice_output = false;
       }
       else if(voice_output && mode == 2){
-        int yAxisBoundary = (int) (canvasheight * 6) / 100;
+
+        threat(2);
+        /*int yAxisBoundary = (int) (canvasheight * 6) / 100;
         int xAxisMiddleBoundary = (int) canvaswidth / 3;
         // Tehlike olacak yerde belirli bir araligi belirtmek icin bu iki variablei kullanıdm
         int xAxisLowerBoundary = xAxisMiddleBoundary - xAxisMiddleBoundary /4 ;
@@ -207,7 +256,7 @@ public class MultiBoxTracker {
         //debug
         //System.out.println("lower : " + xAxisLowerBoundary + " middle : " + xAxisMiddleBoundary + " upper : " + xAxisUpperBoundary);
         //System.out.println("Result! right: " + detectionScreenRect.right  + " left : " + result.getLocation().left + " label: " + result.getTitle());
-
+        System.out.println("canvas width: " + canvaswidth + " canvas height : " + canvasheight);
         //Belirli y degernin altina kalan yerlerde tehlike
         if (result.getLocation().top < yAxisBoundary){
           // eger obje ekrana sigmiyorsa
@@ -224,7 +273,7 @@ public class MultiBoxTracker {
           }
           //_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-_*-
 
-        }
+        }*/
       }
       logger.v(
               "Result! Frame: " + result.getLocation() + " mapped to screen:" + detectionScreenRect);

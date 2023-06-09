@@ -154,6 +154,7 @@ public class ObstacleDetectorActivity extends CameraActivity implements OnImageA
                     @Override
                     public void drawCallback(final Canvas canvas) {
                         tracker.draw(canvas);
+
                         if (isDebug()) {
                             tracker.drawDebug(canvas);
                         }
