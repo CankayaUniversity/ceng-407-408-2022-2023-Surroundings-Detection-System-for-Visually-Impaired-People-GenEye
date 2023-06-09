@@ -84,7 +84,7 @@ public class MultiBoxTracker {
   private int flagThreatRight;
   private int flagRight;
   private int flagLeft;
-
+  private int flagFront;
 
   public MultiBoxTracker(final Context context, TextToSpeech textToSpeech, int mode) {
     for (final int color : COLORS) {
@@ -141,7 +141,9 @@ public class MultiBoxTracker {
 
   public void threat(int mode){
     if (flagThreat == 1){
-      //textToSpeech.speak("Threat", TextToSpeech.QUEUE_FLUSH, null);
+      if (flagFront == 1){
+        textToSpeech.speak("threat in front of you", TextToSpeech.QUEUE_FLUSH, null);
+      }
       if (flagRight == 1 && flagThreatRight == 1){
         textToSpeech.speak("go left", TextToSpeech.QUEUE_FLUSH, null);
       }
@@ -174,12 +176,15 @@ public class MultiBoxTracker {
       System.out.println("trackRight : " + trackedPos.right + " trackLeft : " + trackedPos.left + " centerx : " + trackedPos.centerX());
       //System.out.println("full width : " + canvaswidth + " half width : " + canvaswidth  /2);
       //TODO: degerleri degistir
+      System.out.println("*-*-*-*-*-*-lower : " + ((canvaswidth * 45) / 100 - canvaswidth / 7) + " upper : " + ((canvaswidth * 45) / 100 + canvaswidth / 7) + " center : " + (canvaswidth * 45) / 100);
+      int upperBoundary = ((canvaswidth * 45) / 100 + canvaswidth / 7);
+      int lowerBoundary = ((canvaswidth * 45) / 100 - canvaswidth / 7);
       if (trackedPos.top < (canvasheight * 60) / 100){
         flagThreat = 1;
         if (trackedPos.centerX() < (canvaswidth * 45) / 100){
           flagLeft = 1;
           flagRight = 0;
-          if (trackedPos.right > ((canvaswidth * 45) / 100 - canvaswidth / 10)){
+          if (trackedPos.right > lowerBoundary){
             flagThreatLeft = 1;
           }
           else{
@@ -189,12 +194,19 @@ public class MultiBoxTracker {
         else if(trackedPos.centerX() > (canvaswidth * 45) / 100){
           flagRight = 1;
           flagLeft = 0;
-          if (trackedPos.left > ((canvaswidth * 45) / 100 + canvaswidth / 10)){
+          if (trackedPos.left < upperBoundary){
             flagThreatRight = 1;
+
           }
           else {
             flagThreatRight = 0;
           }
+        }
+        if (trackedPos.right > lowerBoundary && trackedPos.left < upperBoundary){
+          flagFront = 1;
+        }
+        else{
+          flagFront = 0;
         }
       }
       else {
